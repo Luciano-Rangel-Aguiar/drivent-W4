@@ -14,16 +14,6 @@ async function getBookingByUserId(userId: number) {
   return booking;
 }
 
-async function getBookingByRoomId(roomId: number) {
-  const booking = await bookingRepository.findBookingByRoomId(roomId);
-
-  if(!booking) {
-    throw notFoundError();
-  }
-  
-  return booking;
-}
-
 async function postBooking(userId: number, roomId: number ) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) {
@@ -66,7 +56,7 @@ async function updateBookingRoomBybookingId(userId: number, bookingId: number, r
   const roomBooking = await bookingRepository.findBookingByRoomId(roomId);
 
   if(room.capacity <= roomBooking.length) {
-    throw cannotBookRoomError();
+    throw cannotUpdateBookingError();
   }
 
   return bookingRepository.updateBooking({
@@ -78,7 +68,6 @@ async function updateBookingRoomBybookingId(userId: number, bookingId: number, r
 
 const bookingService = {
   getBookingByUserId,
-  getBookingByRoomId,
   postBooking,
   updateBookingRoomBybookingId,
 };
